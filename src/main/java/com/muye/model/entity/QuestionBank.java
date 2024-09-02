@@ -9,13 +9,12 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 帖子点赞
- *
-*/
-@TableName(value = "post_thumb")
+ * 题库
+ * @TableName question_bank
+ */
+@TableName(value ="question_bank")
 @Data
-public class PostThumb implements Serializable {
-
+public class QuestionBank implements Serializable {
     /**
      * id
      */
@@ -23,14 +22,29 @@ public class PostThumb implements Serializable {
     private Long id;
 
     /**
-     * 帖子 id
+     * 标题
      */
-    private Long postId;
+    private String title;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     * 图片
+     */
+    private String picture;
 
     /**
      * 创建用户 id
      */
     private Long userId;
+
+    /**
+     * 编辑时间
+     */
+    private Date editTime;
 
     /**
      * 创建时间
@@ -41,6 +55,11 @@ public class PostThumb implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 是否删除
+     */
+    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
