@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 帖子收藏
@@ -16,7 +16,7 @@ import lombok.Data;
  **/
 @TableName(value = "post_favour")
 @Data
-public class PostFavour implements Serializable {
+public class PostFavour extends entityData implements Serializable {
 
     /**
      * id
@@ -34,15 +34,6 @@ public class PostFavour implements Serializable {
      */
     private Long userId;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

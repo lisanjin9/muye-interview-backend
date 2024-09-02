@@ -1,4 +1,4 @@
-package com.muye.model.dto.user;
+package com.muye.model.dto.questionbank;
 
 import com.muye.common.PageRequest;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserQueryRequest extends PageRequest implements Serializable {
+public class QuestionBankQueryRequest extends PageRequest implements Serializable {
 
     /**
      * id

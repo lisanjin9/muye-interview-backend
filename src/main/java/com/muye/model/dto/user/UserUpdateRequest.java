@@ -1,38 +1,37 @@
 package com.muye.model.dto.user;
 
-import java.io.Serializable;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
- * 用户更新请求
+ * 更新用户评论请求
  *
-*/
+ *
+ */
 @Data
 public class UserUpdateRequest implements Serializable {
+
     /**
      * id
      */
     private Long id;
 
     /**
-     * 用户昵称
+     * 标题
      */
-    private String userName;
+    private String title;
 
     /**
-     * 用户头像
+     * 内容
      */
-    private String userAvatar;
+    private String content;
 
     /**
-     * 简介
+     * 标签列表
      */
-    private String userProfile;
-
-    /**
-     * 用户角色：user/admin/ban
-     */
-    private String userRole;
+    private List<String> tags;
 
     private static final long serialVersionUID = 1L;
 }

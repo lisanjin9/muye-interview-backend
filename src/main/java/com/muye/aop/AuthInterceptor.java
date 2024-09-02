@@ -19,10 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限校验 AOP
-
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class AuthInterceptor {
 
     @Resource
@@ -41,7 +40,8 @@ public class AuthInterceptor {
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         // 当前登录用户
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = null;
+//        User loginUser = userService.getLoginUser(request);
         UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
         // 不需要权限，放行
         if (mustRoleEnum == null) {
@@ -65,6 +65,7 @@ public class AuthInterceptor {
         }
         // 通过权限校验，放行
         return joinPoint.proceed();
+
     }
 }
 

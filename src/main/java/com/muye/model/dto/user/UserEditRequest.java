@@ -6,10 +6,15 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 创建用户评论请求
+ * 编辑用户评论请求
  */
 @Data
-public class UserAddRequest implements Serializable {
+public class UserEditRequest implements Serializable {
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 标题

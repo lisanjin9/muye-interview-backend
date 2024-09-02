@@ -1,4 +1,4 @@
-package com.muye.model.dto.user;
+package com.muye.model.dto.questionbank;
 
 import lombok.Data;
 
@@ -6,10 +6,15 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 创建用户评论请求
+ * 更新用户评论请求
  */
 @Data
-public class UserAddRequest implements Serializable {
+public class QuestionBankUpdateRequest implements Serializable {
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 标题

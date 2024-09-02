@@ -1,6 +1,7 @@
 package com.muye.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.muye.annotation.AuthCheck;
 import com.muye.common.BaseResponse;
 import com.muye.common.DeleteRequest;
 import com.muye.common.ErrorCode;
@@ -8,25 +9,13 @@ import com.muye.common.ResultUtils;
 import com.muye.config.WxOpenConfig;
 import com.muye.constant.UserConstant;
 import com.muye.exception.BusinessException;
+import com.muye.exception.ThrowUtils;
+import com.muye.model.dto.user.*;
 import com.muye.model.entity.User;
 import com.muye.model.vo.LoginUserVO;
 import com.muye.model.vo.UserVO;
 import com.muye.service.UserService;
 import com.muye.service.impl.UserServiceImpl;
-import com.muye.annotation.AuthCheck;
-import com.muye.exception.ThrowUtils;
-import com.muye.model.dto.user.UserAddRequest;
-import com.muye.model.dto.user.UserLoginRequest;
-import com.muye.model.dto.user.UserQueryRequest;
-import com.muye.model.dto.user.UserRegisterRequest;
-import com.muye.model.dto.user.UserUpdateMyRequest;
-import com.muye.model.dto.user.UserUpdateRequest;
-
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -34,17 +23,16 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 用户接口
- *
-*/
+ */
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -75,7 +63,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             return null;
         }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        long result = 1;
+//        long result = userService.userRegister(userAccount, userPassword, checkPassword);
         return ResultUtils.success(result);
     }
 
@@ -96,7 +85,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        LoginUserVO loginUserVO = null;
+//        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(loginUserVO);
     }
 
@@ -105,7 +95,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("code") String code) {
+                                                       @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -116,11 +106,12 @@ public class UserController {
             if (StringUtils.isAnyBlank(unionId, mpOpenId)) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败，系统错误");
             }
-            return ResultUtils.success(userService.userLoginByMpOpen(userInfo, request));
+//            return ResultUtils.success(userService.userLoginByMpOpen(userInfo, request));
         } catch (Exception e) {
             log.error("userLoginByWxOpen error", e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败，系统错误");
         }
+        return null; // 需要删除
     }
 
     /**
@@ -134,7 +125,8 @@ public class UserController {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = userService.userLogout(request);
+        boolean result = true;
+//        boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
 
@@ -146,8 +138,9 @@ public class UserController {
      */
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
-        User user = userService.getLoginUser(request);
-        return ResultUtils.success(userService.getLoginUserVO(user));
+//        User user = userService.getLoginUser(request);
+//        return ResultUtils.success(userService.getLoginUserVO(user));
+        return null;
     }
 
     // endregion
@@ -171,7 +164,8 @@ public class UserController {
         BeanUtils.copyProperties(userAddRequest, user);
         // 默认密码 12345678
         String defaultPassword = "12345678";
-        String encryptPassword = DigestUtils.md5DigestAsHex((UserServiceImpl.SALT + defaultPassword).getBytes());
+        String encryptPassword = null;
+//        String encryptPassword = DigestUtils.md5DigestAsHex((UserServiceImpl.SALT + defaultPassword).getBytes());
         user.setUserPassword(encryptPassword);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -205,7 +199,7 @@ public class UserController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -245,7 +239,8 @@ public class UserController {
     public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
         BaseResponse<User> response = getUserById(id, request);
         User user = response.getData();
-        return ResultUtils.success(userService.getUserVO(user));
+        return ResultUtils.success(null);
+//        return ResultUtils.success(userService.getUserVO(user));
     }
 
     /**
@@ -258,7 +253,7 @@ public class UserController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -275,7 +270,7 @@ public class UserController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -286,7 +281,8 @@ public class UserController {
         Page<User> userPage = userService.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
         Page<UserVO> userVOPage = new Page<>(current, size, userPage.getTotal());
-        List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
+        List<UserVO> userVO = null;
+//        List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
         userVOPage.setRecords(userVO);
         return ResultUtils.success(userVOPage);
     }
@@ -302,11 +298,12 @@ public class UserController {
      */
     @PostMapping("/update/my")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = null;
+//        User loginUser = userService.getLoginUser(request);
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);
         user.setId(loginUser.getId());

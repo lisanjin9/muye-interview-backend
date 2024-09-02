@@ -56,7 +56,8 @@ public class PostFavourController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         // 登录才能操作
-        final User loginUser = userService.getLoginUser(request);
+        final User loginUser = null;
+//        final User loginUser = userService.getLoginUser(request);
         long postId = postFavourAddRequest.getPostId();
         int result = postFavourService.doPostFavour(postId, loginUser);
         return ResultUtils.success(result);
@@ -74,7 +75,8 @@ public class PostFavourController {
         if (postQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = null;
+//        User loginUser = userService.getLoginUser(request);
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
         // 限制爬虫

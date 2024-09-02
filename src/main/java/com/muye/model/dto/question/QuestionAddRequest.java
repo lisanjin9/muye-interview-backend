@@ -1,4 +1,4 @@
-package com.muye.model.dto.user;
+package com.muye.model.dto.question;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * 创建用户评论请求
  */
 @Data
-public class UserAddRequest implements Serializable {
+public class QuestionAddRequest implements Serializable {
 
     /**
      * 标题

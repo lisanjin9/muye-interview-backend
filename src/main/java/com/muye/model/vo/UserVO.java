@@ -1,13 +1,17 @@
 package com.muye.model.vo;
 
+import cn.hutool.json.JSONUtil;
+import com.muye.model.entity.User;
+import lombok.Data;
+import org.springframework.beans.BeanUtils;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
+import java.util.List;
 
 /**
- * 用户视图（脱敏）
- *
-*/
+ * 用户评论视图
+ */
 @Data
 public class UserVO implements Serializable {
 

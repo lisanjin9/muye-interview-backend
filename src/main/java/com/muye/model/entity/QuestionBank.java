@@ -1,20 +1,19 @@
 package com.muye.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 题库
+ *
  * @TableName question_bank
  */
-@TableName(value ="question_bank")
+@TableName(value = "question_bank")
 @Data
-public class QuestionBank implements Serializable {
+public class QuestionBank extends entityData implements Serializable {
     /**
      * id
      */
@@ -59,6 +58,7 @@ public class QuestionBank implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)
