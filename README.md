@@ -14,7 +14,7 @@
     4. Nacos配置中心
 
 ## 3. 数据库表：
-    包文件里有sql文件夹，直接导入即可
+![完成表设计，创建数据库表](https://github.com/lisanjin9/muye-interview-backend/blob/67cfe48f1e7786f6a67f38c6b333f0fc189d1c31/sql/create_table.sql)
 
 
 # 编码日志：
@@ -22,4 +22,4 @@
     1. 使用万用模板修改相关配置信息，完成项目初始化
     2. 提交GitHub
 ###  2024-09-02：
-    1. ![完成表设计，创建数据库表](https://github.com/lisanjin9/muye-interview-backend/blob/67cfe48f1e7786f6a67f38c6b333f0fc189d1c31/sql/create_table.sql)
+    1. 完成表设计，创建数据库表
