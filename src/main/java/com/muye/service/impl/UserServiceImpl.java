@@ -6,9 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.muye.common.ErrorCode;
 import com.muye.constant.CommonConstant;
+import com.muye.exception.BusinessException;
 import com.muye.exception.ThrowUtils;
 import com.muye.mapper.UserMapper;
 import com.muye.model.dto.user.UserQueryRequest;
+import com.muye.model.dto.user.UserRegisterRequest;
+import com.muye.model.entity.Question;
 import com.muye.model.entity.User;
 import com.muye.model.vo.UserVO;
 import com.muye.service.UserService;
@@ -27,6 +30,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 校验数据
@@ -205,6 +210,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //
 //        userVOPage.setRecords(userVOList);
         return userVOPage;
+    }
+
+    @Override
+    public long registerUser(UserRegisterRequest userRegisterRequest) {
+        // 正则表达式依次为 至少包含一个：0-9数字 、 a-z 、 A-Z 、密码不包含空格 、 长度至少8位
+        String regexPassword = "^[a-zA-Z0-9]{8,}";
+        String regexAccount = "^[a-zA-Z0-9]{6,20}";
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        String userAccount = userRegisterRequest.getUserAccount();
+        String userPassword = userRegisterRequest.getUserPassword();
+        String checkPassword = userRegisterRequest.getCheckPassword();
+
+        //判断密码和重复密码是否一致
+        if (!checkPassword.equals(userPassword)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR , "两次密码不一致");
+        }
+        //校验密码是否合规
+        boolean matchesPassword = userPassword.matches(regexPassword);
+        if (!matchesPassword){
+            throw new BusinessException(ErrorCode.OPERATION_ERROR , "密码不符合规定，密码要求: 至少包含0-9数字 、 a-z 、 A-Z ,密码不能包含空格，长度至少8位");
+        }
+
+        // 校验账号是否合规
+        boolean matchesAccount = userAccount.matches(regexAccount);
+        if (!matchesAccount) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR , "账号不符合规定");
+        }
+
+        //判断数据库中是否存在该账号
+        queryWrapper.eq("userAccount" , userAccount);
+        List<User> users = userMapper.selectList(queryWrapper);
+        if (users.size()>0) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"账号已存在");
+        }
+
+        //添加账号进入数据库
+        User user = new User();
+        user.setUserAccount(userRegisterRequest.getUserAccount());
+        user.setUserPassword(userRegisterRequest.getUserPassword());
+        int insert = userMapper.insert(user);
+        return insert;
     }
 
 }

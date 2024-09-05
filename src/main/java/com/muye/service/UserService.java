@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.muye.model.dto.user.UserQueryRequest;
+import com.muye.model.dto.user.UserRegisterRequest;
 import com.muye.model.entity.User;
 import com.muye.model.vo.UserVO;
 
@@ -47,4 +48,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     Page<UserVO> getUserVOPage(Page<User> userPage, HttpServletRequest request);
+
+    long registerUser(UserRegisterRequest userRegisterRequest);
 }

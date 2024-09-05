@@ -60,11 +60,15 @@ public class UserController {
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
+        //判断用户传递的账号、密码、重复密码是否为空
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
-            return null;
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR, (
+                    StringUtils.isEmpty(userAccount) ? "账号不能为空" :
+                    StringUtils.isEmpty(userPassword) ? "密码不能为空" : "重复密码不能为空")
+                    );
         }
-        long result = 1;
-//        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        //进入业务层对账号密码进行校验
+        long result = userService.registerUser(userRegisterRequest);
         return ResultUtils.success(result);
     }
 
