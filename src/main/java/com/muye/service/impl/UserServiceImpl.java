@@ -1,4 +1,5 @@
 package com.muye.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -11,18 +12,21 @@ import com.muye.exception.ThrowUtils;
 import com.muye.mapper.UserMapper;
 import com.muye.model.dto.user.UserQueryRequest;
 import com.muye.model.dto.user.UserRegisterRequest;
-import com.muye.model.entity.Question;
 import com.muye.model.entity.User;
+import com.muye.model.vo.LoginUserVO;
 import com.muye.model.vo.UserVO;
 import com.muye.service.UserService;
 import com.muye.utils.SqlUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 用户评论服务实现
@@ -32,6 +36,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
+
+    private String SALT = "muye";
 
     /**
      * 校验数据
@@ -246,11 +252,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         //添加账号进入数据库
+        // 设置密码加密
+        String pwd = userRegisterRequest.getUserPassword();
+        String salt = UUID.randomUUID().toString();
+        // 基于spring框架中的DigestUtils工具类进行密码加密
+        String userPasswordNew = DigestUtils.md5DigestAsHex((pwd + SALT).getBytes());
         User user = new User();
         user.setUserAccount(userRegisterRequest.getUserAccount());
-        user.setUserPassword(userRegisterRequest.getUserPassword());
+        user.setUserPassword(userPasswordNew);
         int insert = userMapper.insert(user);
         return insert;
     }
+
+    @Override
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+        String userPasswordNew = DigestUtils.md5DigestAsHex((userPassword + SALT).getBytes());
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount" , userAccount)
+                .eq("userPassword" , userPasswordNew);
+        List<User> userList = userMapper.selectList(queryWrapper);
+        LoginUserVO loginUserVO = new LoginUserVO();
+        if (userList.size() == 0){
+            return null;
+        }
+        User user = userList.get(0);
+        loginUserVO.setId(user.getId());
+        loginUserVO.setUserName(user.getUserName());
+        loginUserVO.setUserAvatar(user.getUserAvatar());
+        loginUserVO.setUserProfile(user.getUserProfile());
+        loginUserVO.setUserRole(user.getUserRole());
+        return loginUserVO;
+    }
+
+    /**
+     * 获取当前登录人
+     * @param request
+     * @return
+     */
+    @Override
+    public LoginUserVO getLoginUser(HttpServletRequest request) {
+        LoginUserVO loginUserVO = (LoginUserVO) request.getSession().getAttribute("loginUser");
+        return loginUserVO;
+    }
+
 
 }

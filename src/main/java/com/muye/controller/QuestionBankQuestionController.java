@@ -25,9 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * 用户评论接口
- */
+
 @RestController
 @RequestMapping("/questionBankQuestion")
 @Slf4j

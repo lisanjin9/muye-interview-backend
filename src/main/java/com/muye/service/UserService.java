@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.muye.model.dto.user.UserQueryRequest;
 import com.muye.model.dto.user.UserRegisterRequest;
 import com.muye.model.entity.User;
+import com.muye.model.vo.LoginUserVO;
 import com.muye.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,5 +50,26 @@ public interface UserService extends IService<User> {
      */
     Page<UserVO> getUserVOPage(Page<User> userPage, HttpServletRequest request);
 
+    /**
+     * 用户注册
+     * @param userRegisterRequest
+     * @return
+     */
     long registerUser(UserRegisterRequest userRegisterRequest);
+
+    /**
+     * 用户登录
+     * @param userAccount 账号
+     * @param userPassword 密码
+     * @param request
+     * @return
+     */
+    LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    /**
+     * 获取当前登录人
+     * @param request
+     * @return
+     */
+    LoginUserVO getLoginUser(HttpServletRequest request);
 }

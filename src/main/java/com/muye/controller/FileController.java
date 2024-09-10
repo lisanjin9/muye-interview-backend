@@ -11,7 +11,6 @@ import com.muye.model.dto.file.UploadFileRequest;
 import com.muye.model.entity.User;
 import com.muye.model.enums.FileUploadBizEnum;
 import com.muye.service.UserService;
-import com.muye.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
