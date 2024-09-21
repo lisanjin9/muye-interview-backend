@@ -1,6 +1,7 @@
 package com.muye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.muye.model.dto.user.UserUpdateRequest;
 import com.muye.model.entity.User;
 
 /**

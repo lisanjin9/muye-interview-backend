@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.muye.model.dto.user.UserQueryRequest;
 import com.muye.model.dto.user.UserRegisterRequest;
+import com.muye.model.dto.user.UserUpdateRequest;
 import com.muye.model.entity.User;
 import com.muye.model.vo.LoginUserVO;
 import com.muye.model.vo.UserVO;
@@ -72,4 +73,19 @@ public interface UserService extends IService<User> {
      * @return
      */
     LoginUserVO getLoginUser(HttpServletRequest request);
+
+    /**
+     * 用户推出
+     * @param request
+     * @return
+     */
+    boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 管理员根据id删除用户
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

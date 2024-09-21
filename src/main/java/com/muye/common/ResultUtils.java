@@ -1,5 +1,7 @@
 package com.muye.common;
 
+import org.apache.poi.ss.formula.functions.T;
+
 /**
  * 返回工具类
  *
@@ -15,6 +17,13 @@ public class ResultUtils {
      */
     public static <T> BaseResponse<T> success(T data) {
         return new BaseResponse<>(0, data, "ok");
+    }
+
+    /**
+     * 指定成功内容
+     */
+    public static <T> BaseResponse success(T data , String message){
+        return new BaseResponse<>(0, data, message);
     }
 
     /**

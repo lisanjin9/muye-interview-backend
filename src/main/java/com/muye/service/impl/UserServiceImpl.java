@@ -12,6 +12,7 @@ import com.muye.exception.ThrowUtils;
 import com.muye.mapper.UserMapper;
 import com.muye.model.dto.user.UserQueryRequest;
 import com.muye.model.dto.user.UserRegisterRequest;
+import com.muye.model.dto.user.UserUpdateRequest;
 import com.muye.model.entity.User;
 import com.muye.model.vo.LoginUserVO;
 import com.muye.model.vo.UserVO;
@@ -39,6 +40,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private String SALT = "muye";
 
+
+    //region 历史代码
     /**
      * 校验数据
      *
@@ -217,6 +220,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //        userVOPage.setRecords(userVOList);
         return userVOPage;
     }
+    // endregion
 
     @Override
     public long registerUser(UserRegisterRequest userRegisterRequest) {
@@ -293,6 +297,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public LoginUserVO getLoginUser(HttpServletRequest request) {
         LoginUserVO loginUserVO = (LoginUserVO) request.getSession().getAttribute("loginUser");
         return loginUserVO;
+    }
+
+    @Override
+    public boolean userLogout(HttpServletRequest request) {
+        request.getSession().removeAttribute("loginUser");
+        return true;
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        int result = userMapper.deleteById(id);
+        return result;
     }
 
 

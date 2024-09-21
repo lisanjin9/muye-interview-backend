@@ -1,12 +1,18 @@
 package com.muye.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.muye.annotation.AuthCheck;
 import com.muye.common.BaseResponse;
+import com.muye.common.DeleteRequest;
 import com.muye.common.ErrorCode;
 import com.muye.common.ResultUtils;
 import com.muye.config.WxOpenConfig;
+import com.muye.constant.UserConstant;
 import com.muye.exception.BusinessException;
+import com.muye.model.dto.user.UserAddRequest;
 import com.muye.model.dto.user.UserLoginRequest;
 import com.muye.model.dto.user.UserRegisterRequest;
+import com.muye.model.dto.user.UserUpdateRequest;
 import com.muye.model.entity.User;
 import com.muye.model.vo.LoginUserVO;
 import com.muye.service.UserService;
@@ -89,6 +95,58 @@ public class UserController {
         LoginUserVO loginUserVO = userService.getLoginUser(request);
         return ResultUtils.success(loginUserVO);
     }
+
+    /**
+     * 用户退出
+     */
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        if (null == request) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        boolean result = userService.userLogout(request);
+        return ResultUtils.success(result,result==true?"退出成功":"退出失败");
+    }
+
+    // endregion 登录相关
+
+    // region 管理员管理用户代码
+
+    /**
+     * 管理员新增用户
+     */
+    @PostMapping("/add")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Long> addUser(@RequestBody UserRegisterRequest userRegisterRequest, HttpServletRequest request) {
+        if (null == userRegisterRequest) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        if (null == request) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = 0;
+        id = userService.registerUser(userRegisterRequest);
+        return ResultUtils.success(id,id==0?"新增失败":"新增成功");
+    }
+
+    /**
+     * 管理员删除用户
+     */
+    @PostMapping("/delete")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+        if(null == deleteRequest || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        int result = userService.deleteById(deleteRequest.getId());
+        return ResultUtils.success(result,result==1?"删除成功" : "删除失败");
+    }
+
+    // endregion
+
+
+
+
 //    /**
 //     * 用户登录（微信开放平台）
 //     */
